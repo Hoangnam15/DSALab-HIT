@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineVerse – Thế Giới Điện Ảnh</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070810;
+    --surface: #0e1020;
+    --card: #131527;
+    --border: rgba(255,255,255,0.07);
+    --gold: #e8b84b;
+    --gold-dim: rgba(232,184,75,0.15);
+    --red: #e8483a;
+    --text: #f0ede6;
+    --muted: #7a7a8c;
+    --glass: rgba(13,14,28,0.85);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ─── OVERLAY / PAGES ─────────────────────────────────── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ─── LOGIN PAGE ───────────────────────────────────────── */
+  #loginPage {
+    min-height: 100vh;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .login-bg {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1600&q=80') center/cover;
+    filter: brightness(0.3) saturate(0.6);
+    transform: scale(1.05);
+    animation: slowZoom 20s ease-in-out infinite alternate;
+  }
+
+  @keyframes slowZoom {
+    from { transform: scale(1.05); }
+    to   { transform: scale(1.15); }
+  }
+
+  .login-noise {
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .login-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    padding: 4rem;
+  }
+
+  .login-brand {
+    text-align: center;
+  }
+
+  .login-brand .logo-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 6rem;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    background: linear-gradient(135deg, #fff 30%, var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .login-brand .tagline {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--gold);
+    font-size: 1.15rem;
+    margin-top: 0.5rem;
+    letter-spacing: 0.05em;
+    opacity: 0.9;
+  }
+
+  .floating-cards {
+    margin-top: 3rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .fc {
+    width: 70px; height: 100px;
+    border-radius: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transform: rotate(-5deg);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    transition: transform 0.3s;
+  }
+
+  .fc:nth-child(2) { transform: rotate(0deg) translateY(-8px); }
+  .fc:nth-child(3) { transform: rotate(5deg); }
+
+  .fc img { width: 100%; height: 100%; object-fit: cover; }
+
+  .login-right {
+    width: 460px;
+    background: var(--glass);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-left: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .login-form { width: 100%; }
+
+  .login-form h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+  }
+
+  .login-form p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .form-group { margin-bottom: 1.4rem; }
+
+  .form-group label {
+    display: block;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .form-group input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .form-group input:focus {
+    border-color: var(--gold);
+    background: rgba(232,184,75,0.06);
+  }
+
+  .form-group input::placeholder { color: var(--muted); }
+
+  .form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    font-size: 0.85rem;
+  }
+
+  .remember {
+    display: flex; align-items: center; gap: 0.5rem;
+    color: var(--muted); cursor: pointer;
+  }
+
+  .remember input[type=checkbox] { accent-color: var(--gold); }
+
+  .forgot { color: var(--gold); text-decoration: none; font-size: 0.85rem; }
+  .forgot:hover { text-decoration: underline; }
+
+  .btn-login {
+    width: 100%;
+    padding: 0.95rem;
+    background: var(--gold);
+    color: #000;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .btn-login:hover { opacity: 0.9; }
+  .btn-login:active { transform: scale(0.98); }
+
+  .divider {
+    display: flex; align-items: center; gap: 1rem;
+    margin: 1.5rem 0;
+    color: var(--muted); font-size: 0.8rem;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .social-btns { display: flex; gap: 0.8rem; }
+
+  .btn-social {
+    flex: 1;
+    padding: 0.75rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  }
+
+  .btn-social:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.2);
+  }
+
+  .signup-link {
+    text-align: center;
+    margin-top: 2rem;
+    color: var(--muted);
+    font-size: 0.875rem;
+  }
+
+  .signup-link a { color: var(--gold); text-decoration: none; font-weight: 500; }
+  .signup-link a:hover { text-decoration: underline; }
+
+  /* ─── MAIN SITE ─────────────────────────────────────────── */
+  #mainPage { display: none; }
+  #mainPage.active { display: block; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 4rem;
+    display: flex; align-items: center; gap: 3rem;
+    background: linear-gradient(to bottom, rgba(7,8,16,0.95), transparent);
+    transition: background 0.3s;
+  }
+
+  nav.scrolled {
+    background: rgba(7,8,16,0.97);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.08em;
+    background: linear-gradient(135deg, #fff, var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    cursor: pointer;
+  }
+
+  .nav-links { display: flex; gap: 2rem; flex: 1; }
+
+  .nav-links a {
+    color: rgba(240,237,230,0.7);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  .nav-links a.active,
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-links a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    border-radius: 2px;
+  }
+
+  .nav-actions { display: flex; align-items: center; gap: 1.2rem; margin-left: auto; }
+
+  .nav-search {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    padding: 0.45rem 1rem;
+    cursor: text;
+    transition: background 0.2s;
+  }
+
+  .nav-search:hover { background: rgba(255,255,255,0.1); }
+  .nav-search span { color: var(--muted); font-size: 0.85rem; }
+
+  .nav-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--red));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 0.85rem;
+    cursor: pointer;
+    letter-spacing: 0;
+    color: #000;
+  }
+
+  /* HERO */
+  .hero {
+    height: 100vh;
+    position: relative;
+    display: flex; align-items: flex-end;
+    padding-bottom: 6rem;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1600&q=80') center/cover;
+    animation: heroPan 25s ease-in-out infinite alternate;
+  }
+
+  @keyframes heroPan {
+    from { transform: scale(1.1) translateX(0); }
+    to   { transform: scale(1.1) translateX(-2%); }
+  }
+
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      to right,
+      rgba(7,8,16,0.95) 0%,
+      rgba(7,8,16,0.7) 50%,
+      rgba(7,8,16,0.2) 100%
+    ),
+    linear-gradient(to top, rgba(7,8,16,1) 0%, transparent 40%);
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 0 4rem;
+    max-width: 680px;
+    animation: heroIn 1s ease both;
+  }
+
+  @keyframes heroIn {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--gold-dim);
+    border: 1px solid rgba(232,184,75,0.3);
+    border-radius: 30px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.5; transform: scale(1.5); }
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.5rem, 7vw, 6rem);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    margin-bottom: 1.2rem;
+  }
+
+  .hero h1 em {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--gold);
+    display: block;
+  }
+
+  .hero p {
+    color: rgba(240,237,230,0.7);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    font-weight: 300;
+    max-width: 480px;
+  }
+
+  .hero-meta {
+    display: flex; gap: 1.5rem; align-items: center;
+    margin-bottom: 2rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .hero-meta .rating {
+    display: flex; align-items: center; gap: 0.3rem;
+    color: var(--gold);
+    font-size: 0.95rem; font-weight: 500;
+  }
+
+  .hero-meta .dot {
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: var(--muted);
+  }
+
+  .hero-btns { display: flex; gap: 1rem; }
+
+  .btn-play {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding: 0.85rem 2rem;
+    background: var(--text);
+    color: #000;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .btn-play:hover { background: #fff; }
+  .btn-play:active { transform: scale(0.98); }
+
+  .btn-play .play-icon {
+    width: 0; height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 10px solid #000;
+  }
+
+  .btn-info {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding: 0.85rem 1.8rem;
+    background: rgba(255,255,255,0.1);
+    color: var(--text);
+    font-size: 0.95rem;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s;
+  }
+
+  .btn-info:hover { background: rgba(255,255,255,0.17); }
+
+  /* SECTIONS */
+  .section { padding: 4rem; }
+
+  .section-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 1.8rem;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.06em;
+  }
+
+  .section-title span {
+    color: var(--gold);
+    font-size: 1rem;
+    margin-left: 0.5rem;
+  }
+
+  .see-all {
+    color: var(--gold);
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .see-all:hover { text-decoration: underline; }
+
+  /* MOVIE GRID */
+  .movie-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .movie-card {
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--card);
+    cursor: pointer;
+    position: relative;
+    group: true;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .movie-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+    z-index: 10;
+  }
+
+  .movie-card:hover .card-overlay { opacity: 1; }
+  .movie-card:hover .card-poster img { transform: scale(1.08); }
+
+  .card-poster {
+    aspect-ratio: 2/3;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .card-poster img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    display: block;
+  }
+
+  .card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(7,8,16,0.97) 0%, rgba(7,8,16,0.3) 50%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 1rem;
+  }
+
+  .card-play {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 0.8rem;
+  }
+
+  .card-play::after {
+    content: '';
+    width: 0; height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 8px solid #000;
+    margin-left: 2px;
+  }
+
+  .card-overlay-title {
+    font-size: 0.82rem;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 0.3rem;
+  }
+
+  .card-overlay-meta {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .card-badge {
+    position: absolute; top: 0.5rem; left: 0.5rem;
+    background: var(--red);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+  }
+
+  .card-badge.gold { background: var(--gold); color: #000; }
+
+  .card-info {
+    padding: 0.8rem;
+  }
+
+  .card-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-year {
+    font-size: 0.75rem;
+    color: var(--muted);
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+
+  .card-rating {
+    display: flex; align-items: center; gap: 0.2rem;
+    color: var(--gold); font-size: 0.75rem;
+  }
+
+  /* FEATURED ROW */
+  .featured-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .featured-card {
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 16/9;
+    cursor: pointer;
+  }
+
+  .featured-card img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+  }
+
+  .featured-card:hover img { transform: scale(1.05); }
+
+  .featured-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 1.2rem;
+  }
+
+  .featured-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.3rem;
+  }
+
+  .featured-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* GENRES */
+  .genre-pills {
+    display: flex; gap: 0.8rem; flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+
+  .pill {
+    padding: 0.45rem 1.2rem;
+    border-radius: 30px;
+    border: 1px solid var(--border);
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+    color: var(--muted);
+  }
+
+  .pill:hover, .pill.active {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-dim);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 3rem 4rem 2rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-top: 2rem;
+  }
+
+  .footer-brand .logo-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.08em;
+    background: linear-gradient(135deg, #fff, var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .footer-brand p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin-top: 0.8rem;
+    max-width: 260px;
+  }
+
+  .footer-col h4 {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+  }
+
+  .footer-col a {
+    display: block;
+    color: rgba(240,237,230,0.65);
+    text-decoration: none;
+    font-size: 0.875rem;
+    margin-bottom: 0.6rem;
+    transition: color 0.2s;
+  }
+
+  .footer-col a:hover { color: var(--text); }
+
+  .footer-bottom {
+    grid-column: 1/-1;
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+  /* MODAL */
+  .modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .modal-backdrop.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 700px;
+    overflow: hidden;
+    transform: scale(0.9);
+    transition: transform 0.3s;
+  }
+
+  .modal-backdrop.open .modal { transform: scale(1); }
+
+  .modal-banner {
+    height: 320px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .modal-banner img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  .modal-banner-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, var(--surface) 0%, transparent 60%);
+  }
+
+  .modal-close {
+    position: absolute; top: 1rem; right: 1rem;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+
+  .modal-close:hover { background: rgba(255,255,255,0.15); }
+
+  .modal-body { padding: 1.5rem 2rem 2rem; }
+
+  .modal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  .modal-meta {
+    display: flex; gap: 1.2rem;
+    color: var(--muted); font-size: 0.85rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .modal-meta .rating { color: var(--gold); }
+
+  .modal-desc {
+    color: rgba(240,237,230,0.75);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+  }
+
+  .modal-btns { display: flex; gap: 0.8rem; }
+
+  .btn-sm-play {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.7rem 1.5rem;
+    background: var(--text);
+    color: #000;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: none; border-radius: 6px; cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-sm-play:hover { background: #fff; }
+
+  .btn-sm-list {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.7rem 1.5rem;
+    background: rgba(255,255,255,0.1);
+    color: var(--text); font-size: 0.9rem;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px; cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-sm-list:hover { background: rgba(255,255,255,0.17); }
+
+  /* Error */
+  .form-error {
+    color: var(--red);
+    font-size: 0.8rem;
+    margin-top: 0.4rem;
+    display: none;
+  }
+  .form-error.show { display: block; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ LOGIN PAGE ══════════════ -->
+<div id="loginPage" class="page active">
+  <div class="login-bg"></div>
+  <div class="login-noise"></div>
+
+  <div class="login-left">
+    <div class="login-brand">
+      <div class="logo-text">CineVerse</div>
+      <div class="tagline">Thế Giới Điện Ảnh Trong Tầm Tay</div>
+      <div class="floating-cards">
+        <div class="fc"><img src="https://image.tmdb.org/t/p/w200/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" onerror="this.style.background='#1a1b2e'"></div>
+        <div class="fc"><img src="https://image.tmdb.org/t/p/w200/velWPhVMQeQKcxggNEU8YmIo52R.jpg" onerror="this.style.background='#1a1b2e'"></div>
+        <div class="fc"><img src="https://image.tmdb.org/t/p/w200/9cqNxx0GxF0bAY74W6zwZqxdSYp.jpg" onerror="this.style.background='#1a1b2e'"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-right">
+    <div class="login-form">
+      <h2>Chào Mừng Trở Lại</h2>
+      <p>Đăng nhập để tiếp tục xem phim yêu thích của bạn</p>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="emailInput" placeholder="ban@email.com">
+        <div class="form-error" id="emailError">Vui lòng nhập email hợp lệ.</div>
+      </div>
+
+      <div class="form-group">
+        <label>Mật Khẩu</label>
+        <input type="password" id="passInput" placeholder="••••••••">
+        <div class="form-error" id="passError">Mật khẩu phải có ít nhất 6 ký tự.</div>
+      </div>
+
+      <div class="form-options">
+        <label class="remember">
+          <input type="checkbox"> Ghi nhớ đăng nhập
+        </label>
+        <a href="#" class="forgot">Quên mật khẩu?</a>
+      </div>
+
+      <button class="btn-login" onclick="doLogin()">ĐĂNG NHẬP</button>
+
+      <div class="divider">hoặc đăng nhập với</div>
+
+      <div class="social-btns">
+        <button class="btn-social" onclick="doLogin()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          Google
+        </button>
+        <button class="btn-social" onclick="doLogin()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Facebook
+        </button>
+      </div>
+
+      <div class="signup-link">
+        Chưa có tài khoản? <a href="#" onclick="doLogin()">Đăng ký miễn phí</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ MAIN PAGE ══════════════ -->
+<div id="mainPage" class="page">
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-logo">CineVerse</div>
+    <div class="nav-links">
+      <a href="#" class="active">Trang Chủ</a>
+      <a href="#">Phim Lẻ</a>
+      <a href="#">Phim Bộ</a>
+      <a href="#">Hoạt Hình</a>
+      <a href="#">Top IMDB</a>
+    </div>
+    <div class="nav-actions">
+      <div class="nav-search">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color:var(--muted)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <span>Tìm kiếm...</span>
+      </div>
+      <div class="nav-avatar" title="Tài khoản">TV</div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-badge">Phim Nổi Bật Tuần Này</div>
+      <h1>Dune:<br><em>Part Two</em></h1>
+      <div class="hero-meta">
+        <span class="rating">★ 8.5</span>
+        <span class="dot"></span>
+        <span>2024</span>
+        <span class="dot"></span>
+        <span>2h 46m</span>
+        <span class="dot"></span>
+        <span>Khoa Học Viễn Tưởng</span>
+      </div>
+      <p>Paul Atreides hợp nhất với người Fremen và bắt đầu hành trình trả thù những kẻ đã tiêu diệt gia đình anh. Nhưng anh phải đối mặt với một lựa chọn: tình yêu của anh ấy hay số phận của vũ trụ.</p>
+      <div class="hero-btns">
+        <button class="btn-play" onclick="openModal('dune')">
+          <div class="play-icon"></div>
+          Xem Ngay
+        </button>
+        <button class="btn-info" onclick="openModal('dune')">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          Chi Tiết
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- GENRES -->
+  <div class="section" style="padding-bottom:0">
+    <div class="genre-pills">
+      <button class="pill active">Tất Cả</button>
+      <button class="pill">Hành Động</button>
+      <button class="pill">Kinh Dị</button>
+      <button class="pill">Lãng Mạn</button>
+      <button class="pill">Hài Hước</button>
+      <button class="pill">Tâm Lý</button>
+      <button class="pill">Khoa Học Viễn Tưởng</button>
+      <button class="pill">Hoạt Hình</button>
+      <button class="pill">Phiêu Lưu</button>
+    </div>
+  </div>
+
+  <!-- TRENDING -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-title">Phim Thịnh Hành <span>↗</span></div>
+      <a href="#" class="see-all">Xem Tất Cả →</a>
+    </div>
+    <div class="movie-row" id="trendingGrid"></div>
+  </section>
+
+  <!-- FEATURED -->
+  <section class="section" style="padding-top:0">
+    <div class="section-header">
+      <div class="section-title">Chủ Đề Nổi Bật</div>
+    </div>
+    <div class="featured-row">
+      <div class="featured-card">
+        <img src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=600&q=80" alt="">
+        <div class="featured-overlay">
+          <div class="featured-tag">Bộ Sưu Tập</div>
+          <div class="featured-title">Marvel Cinematic Universe</div>
+        </div>
+      </div>
+      <div class="featured-card">
+        <img src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?w=600&q=80" alt="">
+        <div class="featured-overlay">
+          <div class="featured-tag">Đặc Sắc</div>
+          <div class="featured-title">Phim Châu Á 2024</div>
+        </div>
+      </div>
+      <div class="featured-card">
+        <img src="https://images.unsplash.com/photo-1586899028174-e7098604235b?w=600&q=80" alt="">
+        <div class="featured-overlay">
+          <div class="featured-tag">Top Rated</div>
+          <div class="featured-title">Phim Kinh Điển IMDB 250</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEW RELEASES -->
+  <section class="section" style="padding-top:0">
+    <div class="section-header">
+      <div class="section-title">Mới Cập Nhật</div>
+      <a href="#" class="see-all">Xem Tất Cả →</a>
+    </div>
+    <div class="movie-row" id="newGrid"></div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">
+      <div class="logo-text">CineVerse</div>
+      <p>Nền tảng xem phim trực tuyến hàng đầu với hàng ngàn bộ phim HD từ khắp nơi trên thế giới.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Thể Loại</h4>
+      <a href="#">Hành Động</a>
+      <a href="#">Tâm Lý</a>
+      <a href="#">Kinh Dị</a>
+      <a href="#">Hoạt Hình</a>
+    </div>
+    <div class="footer-col">
+      <h4>Hỗ Trợ</h4>
+      <a href="#">Trung Tâm Hỗ Trợ</a>
+      <a href="#">Điều Khoản</a>
+      <a href="#">Bảo Mật</a>
+      <a href="#">Liên Hệ</a>
+    </div>
+    <div class="footer-col">
+      <h4>Tài Khoản</h4>
+      <a href="#">Hồ Sơ</a>
+      <a href="#">Danh Sách Yêu Thích</a>
+      <a href="#">Lịch Sử Xem</a>
+      <a href="#" onclick="logout()">Đăng Xuất</a>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 CineVerse. Mọi quyền được bảo lưu.</span>
+      <span>🇻🇳 Tiếng Việt</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════ MODAL ══════════════ -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
+  <div class="modal" id="movieModal">
+    <div class="modal-banner">
+      <img id="modalImg" src="" alt="">
+      <div class="modal-banner-overlay"></div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-meta" id="modalMeta"></div>
+      <div class="modal-desc" id="modalDesc"></div>
+      <div class="modal-btns">
+        <button class="btn-sm-play">▶ Xem Ngay</button>
+        <button class="btn-sm-list">+ Danh Sách</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────
+const movies = {
+  trending: [
+    { title: "Oppenheimer", year: 2023, rating: 8.3, genre: "Tiểu Sử", badge: "HD", img: "https://image.tmdb.org/t/p/w300/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg", desc: "Câu chuyện về J. Robert Oppenheimer và vai trò của ông trong việc phát triển bom nguyên tử trong Thế chiến II." },
+    { title: "Poor Things", year: 2023, rating: 8.0, genre: "Kỳ Ảo", badge: "NEW", img: "https://image.tmdb.org/t/p/w300/kCGlIMHnOm8JPXIRrNPlZpyMkAm.jpg", desc: "Câu chuyện về Bella Baxter, một phụ nữ trẻ được hồi sinh bởi nhà khoa học lệch lạc Dr. Godwin Baxter." },
+    { title: "Killers of the Flower Moon", year: 2023, rating: 7.6, genre: "Tội Phạm", badge: "", img: "https://image.tmdb.org/t/p/w300/dB6Krk806zeqd1psiCaFXqMqZIt.jpg", desc: "Câu chuyện có thật về những vụ giết người bí ẩn trong cộng đồng Osage giàu có ở Oklahoma những năm 1920." },
+    { title: "Past Lives", year: 2023, rating: 7.9, genre: "Tình Cảm", badge: "4K", img: "https://image.tmdb.org/t/p/w300/k3waqVXSnCNBOF03KJzGNVeJHCx.jpg", desc: "Hai người bạn thời thơ ấu tại Seoul tái ngộ nhau 20 năm sau ở New York, nơi họ phải đối mặt với tình yêu và số phận." },
+    { title: "The Zone of Interest", year: 2023, rating: 7.4, genre: "Lịch Sử", badge: "", img: "https://image.tmdb.org/t/p/w300/hUu9zyZmKuXA9JR3iOKECWEBJCR.jpg", desc: "Cuộc sống của người chỉ huy trại Auschwitz và vợ anh ta khi họ xây dựng cuộc sống mơ ước bên cạnh trại." },
+    { title: "American Fiction", year: 2023, rating: 7.5, genre: "Hài", badge: "NEW", img: "https://image.tmdb.org/t/p/w300/5Eip60UDiPLASyKjmHPMruggTDl.jpg", desc: "Một nhà văn da đen mệt mỏi với việc mọi người định nghĩa anh bởi chủng tộc viết một cuốn sách phúng thích." },
+    { title: "Saltburn", year: 2023, rating: 7.1, genre: "Tâm Lý", badge: "HOT", img: "https://image.tmdb.org/t/p/w300/qjhahNLSZ705B5JP92YMEYPocPz.jpg", desc: "Một sinh viên đại học bị ám ảnh bởi người bạn quyến rũ của mình và dành kỳ nghỉ hè tại biệt thự gia đình cậu ta." },
+    { title: "Maestro", year: 2023, rating: 6.9, genre: "Tiểu Sử", badge: "", img: "https://image.tmdb.org/t/p/w300/4PJcuB6dFIuBOYIL5gOSovTygQy.jpg", desc: "Câu chuyện tình yêu kéo dài suốt cuộc đời giữa nhạc trưởng Leonard Bernstein và vợ ông, Felicia Montealegre." },
+  ],
+  newReleases: [
+    { title: "Dune: Part Two", year: 2024, rating: 8.5, genre: "Khoa Học", badge: "4K", img: "https://image.tmdb.org/t/p/w300/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg", desc: "Paul Atreides hợp nhất với người Fremen và bắt đầu hành trình trả thù những kẻ đã tiêu diệt gia đình anh." },
+    { title: "Civil War", year: 2024, rating: 7.2, genre: "Hành Động", badge: "NEW", img: "https://image.tmdb.org/t/p/w300/sh7Rg8Er3tFcN9BpKIPOMvALgZd.jpg", desc: "Một nhóm nhà báo chiến trường vượt qua Mỹ trong cuộc nội chiến tàn khốc." },
+    { title: "Monkey Man", year: 2024, rating: 6.9, genre: "Hành Động", badge: "HD", img: "https://image.tmdb.org/t/p/w300/rOmUuQEZfPXglwFs5ELLLUDKodL.jpg", desc: "Một chàng trai trẻ thực hiện hành trình trả thù tàn bạo chống lại những kẻ đã tàn phá làng quê của anh." },
+    { title: "Godzilla x Kong", year: 2024, rating: 6.3, genre: "Hành Động", badge: "4K", img: "https://image.tmdb.org/t/p/w300/tMefBSflR6PGQLv7WvFPpTLf5HJ.jpg", desc: "Godzilla và Kong phải hợp lực để đối mặt với một mối đe dọa chưa từng có từ Hollow Earth." },
+    { title: "Imaginary", year: 2024, rating: 5.2, genre: "Kinh Dị", badge: "", img: "https://image.tmdb.org/t/p/w300/nEu30bgCzUCdBn7xXBSGiCxfkup.jpg", desc: "Một phụ nữ trẻ trở về ngôi nhà thơ ấu và phát hiện người bạn tưởng tượng của mình không hề vô hại." },
+    { title: "Arthur the King", year: 2024, rating: 7.0, genre: "Phiêu Lưu", badge: "NEW", img: "https://image.tmdb.org/t/p/w300/cCFpUGx3XGVy7AAWY3JLGhMWWqV.jpg", desc: "Câu chuyện có thật về một vận động viên m冒险 trong cuộc đua địa hình và chú chó hoang gặp trên đường." },
+    { title: "Road House", year: 2024, rating: 6.3, genre: "Hành Động", badge: "HD", img: "https://image.tmdb.org/t/p/w300/bXi6IQiQDHD00JFio5ZSZOnyRhb.jpg", desc: "Một cựu võ sĩ UFC được thuê để dọn dẹp một quán bar khét tiếng ở Florida Keys." },
+    { title: "Damsel", year: 2024, rating: 5.9, genre: "Phiêu Lưu", badge: "NEW", img: "https://image.tmdb.org/t/p/w300/8VIYGpCdiCMRCPhjITeS7KiIi.jpg", desc: "Một công chúa phát hiện hôn nhân của mình chỉ là cái bẫy để dâng cô cho một con rồng hung tàn." },
+  ]
+};
+
+const modalData = {
+  dune: {
+    title: "Dune: Part Two",
+    img: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=700&q=80",
+    meta: '<span class="rating">★ 8.5</span><span>2024</span><span>2h 46m</span><span>Sci-Fi / Phiêu Lưu</span>',
+    desc: "Paul Atreides hợp nhất với người Fremen và bắt đầu hành trình trả thù những kẻ đã tiêu diệt gia đình anh. Nhưng anh phải đối mặt với một lựa chọn định mệnh: tình yêu của anh hay số phận của vũ trụ đã biết."
+  }
+};
+
+// ─── RENDER GRIDS ─────────────────────────────────────────
+function renderMovies(data, containerId) {
+  const grid = document.getElementById(containerId);
+  grid.innerHTML = data.map(m => `
+    <div class="movie-card" onclick="openMovieModal('${m.title.replace(/'/g,"\\'")}','${m.img}','${m.genre}','${m.year}','${m.rating}','${m.desc.replace(/'/g,"\\'")}')">
+      <div class="card-poster">
+        <img src="${m.img}" alt="${m.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450/131527/7a7a8c?text=No+Image'">
+        ${m.badge ? `<div class="card-badge ${m.badge==='NEW'?'gold':''}">${m.badge}</div>` : ''}
+        <div class="card-overlay">
+          <div class="card-play"></div>
+          <div class="card-overlay-title">${m.title}</div>
+          <div class="card-overlay-meta">${m.genre} · ${m.year}</div>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="card-title">${m.title}</div>
+        <div class="card-year">
+          <span>${m.year}</span>
+          <span class="card-rating">★ ${m.rating}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ─── LOGIN ─────────────────────────────────────────────────
+function doLogin() {
+  const email = document.getElementById('emailInput').value;
+  const pass  = document.getElementById('passInput').value;
+  let ok = true;
+
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('emailError').classList.add('show'); ok = false;
+  } else { document.getElementById('emailError').classList.remove('show'); }
+
+  if (pass && pass.length < 6) {
+    document.getElementById('passError').classList.add('show'); ok = false;
+  } else { document.getElementById('passError').classList.remove('show'); }
+
+  // Allow entry with any/empty credentials for demo
+  document.getElementById('loginPage').classList.remove('active');
+  document.getElementById('mainPage').classList.add('active');
+  document.getElementById('mainPage').style.display = 'block';
+
+  renderMovies(movies.trending, 'trendingGrid');
+  renderMovies(movies.newReleases, 'newGrid');
+}
+
+function logout() {
+  document.getElementById('mainPage').classList.remove('active');
+  document.getElementById('mainPage').style.display = 'none';
+  document.getElementById('loginPage').classList.add('active');
+}
+
+// ─── MODAL ─────────────────────────────────────────────────
+function openModal(key) {
+  const d = modalData[key];
+  if (!d) return;
+  document.getElementById('modalImg').src = d.img;
+  document.getElementById('modalTitle').textContent = d.title;
+  document.getElementById('modalMeta').innerHTML = d.meta;
+  document.getElementById('modalDesc').textContent = d.desc;
+  document.getElementById('modalBackdrop').classList.add('open');
+}
+
+function openMovieModal(title, img, genre, year, rating, desc) {
+  document.getElementById('modalImg').src = img;
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalMeta').innerHTML = `<span class="rating">★ ${rating}</span><span>${year}</span><span>${genre}</span>`;
+  document.getElementById('modalDesc').textContent = desc;
+  document.getElementById('modalBackdrop').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalBackdrop'))
+    document.getElementById('modalBackdrop').classList.remove('open');
+}
+
+function closeModalDirect() {
+  document.getElementById('modalBackdrop').classList.remove('open');
+}
+
+// ─── NAV SCROLL ───────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar')?.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ─── GENRE PILLS ─────────────────────────────────────────
+document.querySelectorAll('.pill').forEach(p => {
+  p.addEventListener('click', function() {
+    document.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// Allow Enter key on login
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('loginPage').classList.contains('active')) doLogin();
+});
+</script>
+</body>
+</html>
